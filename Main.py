@@ -37,7 +37,8 @@ class Calc(ast.NodeVisitor):
 
 done = False
 r = stt.Recognizer()
-r.adjust_for_ambient_noise
+#r.adjust_for_ambient_noise
+
 
 def synthesis(speech):
     outbuffer = "speech-buffer.mp3"
@@ -45,11 +46,12 @@ def synthesis(speech):
     tts.save(outbuffer)
     os.system(outbuffer)
 
+
 def listen ():
     error_count = 0
     with stt.Microphone() as source:
         try:
-            audio = r.listen(source)
+            audio = r.adjust_for_ambient_noise.listen(source)
             speech_out = r.recognize_google(audio)
             return speech_out
         except:
@@ -61,6 +63,7 @@ synthesis("I'm listening")
 while not done:
 
         #check input, start options
+
         text = listen()
 
         if text != "":
@@ -70,10 +73,12 @@ while not done:
             elif text == "repeat" or "parrot":
                 text = ""
                 text = listen()
+                print(text)
                 synthesis(text)
             elif text == "calculate":
                 text = ""
                 text = listen()
+                print(text)
                 calculation = Calc.evaluate(text)
                 synthesis(calculation)
         else:
